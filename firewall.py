@@ -57,7 +57,7 @@ class FireWall(object):
         return '.'.join(ans)
 
 
-    def validate(self, dir, protocal, port, ip):
+    def accept_packet(self, dir, protocal, port, ip):
         ip = self.ip_fill_zero(ip)
         ip_arr = [ips[0] for ips in self.ip_index]
         #binary search index, ip look up list could be more optimized by using B+ Tree
@@ -82,21 +82,21 @@ class TestFireWall(unittest.TestCase):
         self.fw = FireWall('rules.txt');
 
     def test_validate_1(self):
-        self.assertTrue(self.fw.validate('inbound', 'tcp', '80', '192.168.1.2'))
-        self.assertFalse(self.fw.validate('outbound', 'udp', '80', '192.168.1.2'))
-        self.assertFalse(self.fw.validate('outbound', 'tcp', '0', '192.168.1.2'))
+        self.assertTrue(self.fw.accept_packet('inbound', 'tcp', '80', '192.168.1.2'))
+        self.assertFalse(self.fw.accept_packet('outbound', 'udp', '80', '192.168.1.2'))
+        self.assertFalse(self.fw.accept_packet('outbound', 'tcp', '0', '192.168.1.2'))
 
     # inbound,udp,53,192.168.1.1-192.168.2.5
     def test_validate_ip_range(self):
-        self.assertTrue(self.fw.validate('inbound', 'udp', '53', '192.168.1.1'))
-        self.assertTrue(self.fw.validate('inbound', 'udp', '53', '192.168.2.5'))
-        self.assertTrue(self.fw.validate('inbound', 'udp', '53', '192.168.1.110'))
-        self.assertFalse(self.fw.validate('inbound', 'udp', '53', '192.168.2.6'))
+        self.assertTrue(self.fw.accept_packet('inbound', 'udp', '53', '192.168.1.1'))
+        self.assertTrue(self.fw.accept_packet('inbound', 'udp', '53', '192.168.2.5'))
+        self.assertTrue(self.fw.accept_packet('inbound', 'udp', '53', '192.168.1.110'))
+        self.assertFalse(self.fw.accept_packet('inbound', 'udp', '53', '192.168.2.6'))
 
     def test_validate_port_range(self):
-        self.assertTrue(self.fw.validate('outbound', 'udp', '1000', '52.12.48.92'))
-        self.assertTrue(self.fw.validate('outbound', 'udp', '2000', '52.12.48.92'))
-        self.assertFalse(self.fw.validate('outbound', 'udp', '2001', '52.12.48.92'))
+        self.assertTrue(self.fw.accept_packet('outbound', 'udp', '1000', '52.12.48.92'))
+        self.assertTrue(self.fw.accept_packet('outbound', 'udp', '2000', '52.12.48.92'))
+        self.assertFalse(self.fw.accept_packet('outbound', 'udp', '2001', '52.12.48.92'))
 
 if __name__ == '__main__':
     unittest.main()
