@@ -15,7 +15,7 @@ Features
 * Initializing
     *  `fw = FireWall('path of your rule file')`
 * addRule
-Adding a rule to firewall
+Adding a rule to firewall (Time Complexity O(logn))
     *   fw.addRule('direction', 'protocal' start_port, end_port, start_ip, end_ip)
     *   direiction(string):"inbound" or "outbound"
     *   protocal(string):exactly one of “tcp” or “udp”, all lowercase
@@ -23,7 +23,7 @@ Adding a rule to firewall
     *   end_port: an integer from 0 to 65535
     *   start_ip: an integer from 0 to 255255255255
     *   end_ip: an integer from 0 to 255255255255
-* accept_packet
+* accept_packet (Time Complexity O(logn + m  where n is total rules in interval tree and m is number of match items)
     * fw.accept_packet('direction', 'protocal', 'port', 'ip_address')
     * it takes exactly four arguments and returns a boolean:
     true, if there exists a rule in the file that this object was initialized with that allows traffic
